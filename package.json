@@ -12,6 +12,7 @@
     "build:extension": "pnpm --filter @adhdont/extension build",
     "build:extension:firefox": "pnpm --filter @adhdont/extension build:firefox",
     "check": "biome check --write .",
+    "typecheck": "tsc --noEmit -p packages/shared && tsc --noEmit -p apps/api && tsc --noEmit -p apps/web && tsc --noEmit -p apps/extension",
     "test": "pnpm -r --if-present test"
   },
   "devDependencies": {

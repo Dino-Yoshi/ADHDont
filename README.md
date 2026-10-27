@@ -34,6 +34,7 @@ cp apps/extension/.env.example apps/extension/.env
 | `pnpm build:extension` | Builds the Chromium extension into `apps/extension/.output/chrome-mv3` |
 | `pnpm build:extension:firefox` | Builds the Firefox extension into `apps/extension/.output/firefox-mv3` |
 | `pnpm check` | Formats and lints everything with Biome |
+| `pnpm typecheck` | Type-checks every package with `tsc` |
 | `pnpm test` | Runs the tests |
 
 ## Load the extension
