@@ -10,15 +10,15 @@ This is a deliberately small app due 2026-11-07. Build the simplest thing that m
 
 The repo is a pnpm workspace:
 
-| Path | What | Owner |
-|---|---|---|
-| `apps/web` | Portal: React + TypeScript + Vite | Daveigh |
-| `apps/api` | REST API: Fastify + TypeScript, Supabase Postgres + Auth | Darien |
-| `apps/extension` | Lockdown enforcement: WXT + TypeScript | King |
-| `packages/shared` | Zod schemas and types for every API request and response | shared |
+| Path | What |
+|---|---|
+| `apps/web` | Portal: React + TypeScript + Vite |
+| `apps/api` | REST API: Fastify + TypeScript, Supabase Postgres + Auth |
+| `apps/extension` | Lockdown enforcement: WXT + TypeScript |
+| `packages/shared` | Lockdown core, plus Zod schemas and types for every API request and response |
 
 - Every API payload is defined once, in `packages/shared`. The API and both clients import it from there.
-- Stay inside the app your ticket names. When a change touches `packages/shared` or another owner's app, say so in the PR description so that owner reviews it.
+- Each ticket is a vertical slice: build every layer it names (database, API, portal, extension), whichever apps that touches. When it changes `packages/shared`, say so in the PR description.
 
 ## Code
 
