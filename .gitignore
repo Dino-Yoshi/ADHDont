@@ -1,1 +1,6 @@
 .handoffs/
+node_modules
+.env
+.output
+.wxt
+dist
