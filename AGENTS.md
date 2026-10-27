@@ -22,9 +22,8 @@ The repo is a pnpm workspace:
 
 ## Code
 
-- TypeScript `strict` everywhere. Type values at the boundaries (requests, storage, env) with the shared Zod schemas, and use `unknown` plus narrowing where a type is genuinely unknown.
-- Biome is the one formatter and linter, configured once at the repo root. Commit only code that passes it.
-- Name files in kebab-case, React components in PascalCase (`block-list.tsx` exports `BlockList`), and hooks as `useThing`.
+- Before writing or reviewing code, read `docs/style-guide.md`: formatting, naming, domain words, TypeScript, and how the API, portal and extension are written.
+- TypeScript `strict` everywhere. Commit only code that passes Biome.
 - Logins go through Supabase Auth; the app never stores passwords. The API verifies the Supabase JWT on every route, and every table has row-level security.
 - Each app keeps its secrets in a gitignored `.env` and commits a `.env.example` listing every key with a placeholder value.
 
