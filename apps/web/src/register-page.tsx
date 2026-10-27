@@ -2,8 +2,9 @@ import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "./supabase";
 
-// A taken username makes the database trigger fail, and Supabase hides the cause.
-const TRIGGER_FAILED_MESSAGE = "Database error saving new user";
+// A taken username makes the database trigger fail. Newer Supabase versions pass the unique-key
+// error through; older ones replace it with a generic message.
+const USERNAME_TAKEN_MESSAGES = ["profiles_username_key", "Database error saving new user"];
 
 export function RegisterPage() {
   const navigate = useNavigate();
@@ -22,7 +23,9 @@ export function RegisterPage() {
     });
     if (error) {
       setMessage(
-        error.message.includes(TRIGGER_FAILED_MESSAGE) ? "That username is taken." : error.message,
+        USERNAME_TAKEN_MESSAGES.some((text) => error.message.includes(text))
+          ? "That username is taken."
+          : error.message,
       );
       return;
     }
