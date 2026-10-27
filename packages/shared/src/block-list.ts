@@ -35,8 +35,9 @@ export function normaliseDomain(
   } catch {
     return { ok: false, reason: "invalid" };
   }
-  const domain = hostname.startsWith("www.") ? hostname.slice(4) : hostname;
-  if (!domain.includes(".")) {
+  const bareHostname = hostname.endsWith(".") ? hostname.slice(0, -1) : hostname;
+  const domain = bareHostname.startsWith("www.") ? bareHostname.slice(4) : bareHostname;
+  if (!domain.includes(".") || !/^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(domain)) {
     return { ok: false, reason: "invalid" };
   }
   return { ok: true, domain };

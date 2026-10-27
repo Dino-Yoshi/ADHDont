@@ -53,6 +53,20 @@ describe("normaliseDomain", () => {
     });
   });
 
+  test("strips one trailing dot", () => {
+    expect(normaliseDomain("reddit.com.")).toEqual({ ok: true, domain: "reddit.com" });
+    expect(normaliseDomain("https://www.reddit.com./r/all")).toEqual({
+      ok: true,
+      domain: "reddit.com",
+    });
+  });
+
+  test("rejects a hostname with characters other than a-z, 0-9, dot and hyphen", () => {
+    expect(normaliseDomain("*.reddit.com")).toEqual({ ok: false, reason: "invalid" });
+    expect(normaliseDomain("red_dit.com")).toEqual({ ok: false, reason: "invalid" });
+    expect(normaliseDomain("reddit.com..")).toEqual({ ok: false, reason: "invalid" });
+  });
+
   test("rejects blank input", () => {
     expect(normaliseDomain("")).toEqual({ ok: false, reason: "invalid" });
     expect(normaliseDomain("   ")).toEqual({ ok: false, reason: "invalid" });
