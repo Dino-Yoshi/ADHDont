@@ -21,6 +21,21 @@ export const rejectedEntrySchema = z.object({
 });
 export type RejectedEntry = z.infer<typeof rejectedEntrySchema>;
 
+export const blockListResponseSchema = z.object({
+  domains: z.array(z.string()),
+});
+export type BlockListResponse = z.infer<typeof blockListResponseSchema>;
+
+export const updateBlockListRequestSchema = z.object({
+  entries: z.array(z.string()),
+});
+export type UpdateBlockListRequest = z.infer<typeof updateBlockListRequestSchema>;
+
+export const updateBlockListResponseSchema = blockListResponseSchema.extend({
+  rejected: z.array(rejectedEntrySchema),
+});
+export type UpdateBlockListResponse = z.infer<typeof updateBlockListResponseSchema>;
+
 export function normaliseDomain(
   raw: string,
 ): { ok: true; domain: string } | { ok: false; reason: "invalid" } {

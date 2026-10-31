@@ -1,11 +1,20 @@
-export type { RejectedEntry, RejectReason } from "./block-list";
+export type {
+  BlockListResponse,
+  RejectedEntry,
+  RejectReason,
+  UpdateBlockListRequest,
+  UpdateBlockListResponse,
+} from "./block-list";
 export {
+  blockListResponseSchema,
   buildBlockList,
   DEFAULT_BLOCK_LIST,
   isOwnDomain,
   normaliseDomain,
   rejectedEntrySchema,
   rejectReasonSchema,
+  updateBlockListRequestSchema,
+  updateBlockListResponseSchema,
 } from "./block-list";
 export type { Health } from "./health";
 export { healthSchema } from "./health";

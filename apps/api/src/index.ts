@@ -2,6 +2,7 @@ import { healthSchema } from "@adhdont/shared";
 import cors from "@fastify/cors";
 import Fastify from "fastify";
 import { requireLogin } from "./auth-plugin";
+import { blockListRoutes } from "./block-list-routes";
 import { config } from "./config";
 import { meRoutes } from "./me-routes";
 
@@ -18,6 +19,7 @@ app.get("/health", async () => healthSchema.parse({ ok: true }));
 await app.register(async (authed) => {
   requireLogin(authed);
   await authed.register(meRoutes);
+  await authed.register(blockListRoutes);
 });
 
 await app.listen({ host: "0.0.0.0", port: config.PORT });
