@@ -10,7 +10,9 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "@adhdont/shared": "workspace:*"
+    "@adhdont/shared": "workspace:*",
+    "@supabase/supabase-js": "^2.118.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "wxt": "^0.21.5"
