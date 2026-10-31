@@ -2,10 +2,51 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ADHDont</title>
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <h1>ADHDont</h1>
+    <header>
+      <h1>ADHDont</h1>
+    </header>
+
+    <main id="app">
+      <div id="loading" class="status-box">Loading...</div>
+
+      <div id="signed-in-view" class="hidden">
+        <p class="status-user">Signed in as <strong id="username-display"></strong></p>
+        <button id="sign-out-button" type="button" class="btn btn-secondary">Sign out</button>
+      </div>
+
+      <div id="signed-out-view" class="hidden">
+        <form id="sign-in-form">
+          <div class="form-group">
+            <label for="email-input">Email</label>
+            <input
+              id="email-input"
+              type="email"
+              placeholder="name@example.com"
+              required
+              autocomplete="email"
+            />
+          </div>
+          <div class="form-group">
+            <label for="password-input">Password</label>
+            <input
+              id="password-input"
+              type="password"
+              placeholder="Password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+          <button id="sign-in-button" type="submit" class="btn btn-primary">Sign in</button>
+        </form>
+        <p id="error-message" class="error-text hidden" role="alert"></p>
+      </div>
+    </main>
+
     <script type="module" src="./main.ts"></script>
   </body>
 </html>
