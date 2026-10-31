@@ -5,8 +5,9 @@ import {
   updateBlockListRequestSchema,
   updateBlockListResponseSchema,
 } from "@adhdont/shared";
-import type { FastifyPluginAsync, FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import { config } from "./config";
+import { sendDatabaseError } from "./database-error";
 
 async function replaceBlockList(request: FastifyRequest, domains: string[]) {
   const { error: deleteError } = await request.supabase
@@ -27,16 +28,6 @@ async function replaceBlockList(request: FastifyRequest, domains: string[]) {
     .update({ block_list_seeded: true })
     .eq("id", request.userId);
   return profileError;
-}
-
-function sendDatabaseError(
-  request: FastifyRequest,
-  reply: FastifyReply,
-  error: unknown,
-  message: string,
-) {
-  request.log.error({ err: error }, message);
-  return reply.code(500).send({ message });
 }
 
 export const blockListRoutes: FastifyPluginAsync = async (app) => {

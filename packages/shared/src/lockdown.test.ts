@@ -4,6 +4,7 @@ import {
   coinsFor,
   isValidLockdownLength,
   type LockdownTimes,
+  lockdownEndTime,
   lockdownStatus,
   MAX_LOCKDOWN_MINUTES,
   MIN_LOCKDOWN_MINUTES,
@@ -45,6 +46,12 @@ describe("isValidLockdownLength", () => {
     expect(isValidLockdownLength(5.5)).toBe(false);
     expect(isValidLockdownLength(Number.NaN)).toBe(false);
     expect(isValidLockdownLength(Number.POSITIVE_INFINITY)).toBe(false);
+  });
+});
+
+describe("lockdownEndTime", () => {
+  test("is the chosen number of minutes after the start", () => {
+    expect(lockdownEndTime(startedAt, 30)).toEqual(endsAt);
   });
 });
 

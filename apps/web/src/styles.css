@@ -29,6 +29,31 @@ section {
   color: #a22;
 }
 
+.coin-total {
+  font-weight: 600;
+}
+
+.lockdown-countdown {
+  font-size: 2.5rem;
+  font-variant-numeric: tabular-nums;
+  margin-block: 1rem;
+}
+
+.lockdown-length {
+  display: flex;
+  gap: 1rem;
+  margin-block-end: 1rem;
+}
+
+.lockdown-length input {
+  margin-inline-start: 0.5rem;
+  width: 4rem;
+}
+
+.lockdown-error {
+  color: #a22;
+}
+
 .visually-hidden {
   clip: rect(0, 0, 0, 0);
   clip-path: inset(50%);
