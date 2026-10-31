@@ -16,6 +16,15 @@
 
       <div id="signed-in-view" class="hidden">
         <p class="status-user">Signed in as <strong id="username-display"></strong></p>
+
+        <div id="lockdown-section" class="lockdown-section hidden">
+          <span class="lockdown-badge">Lockdown Active</span>
+          <div class="lockdown-time-box">
+            <span class="time-label">Time remaining</span>
+            <span id="lockdown-time" class="time-value">--:--:--</span>
+          </div>
+        </div>
+
         <button id="sign-out-button" type="button" class="btn btn-secondary">Sign out</button>
       </div>
 

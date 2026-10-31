@@ -1,4 +1,9 @@
-import { type MeResponse, meResponseSchema } from "@adhdont/shared";
+import {
+  type ActiveLockdownResponse,
+  activeLockdownResponseSchema,
+  type MeResponse,
+  meResponseSchema,
+} from "@adhdont/shared";
 import { config } from "./config";
 import { supabase } from "./supabase";
 
@@ -31,4 +36,8 @@ async function request(path: string): Promise<unknown> {
 
 export async function getMe(): Promise<MeResponse> {
   return meResponseSchema.parse(await request("/me"));
+}
+
+export async function getActiveLockdown(): Promise<ActiveLockdownResponse> {
+  return activeLockdownResponseSchema.parse(await request("/lockdown"));
 }
