@@ -13,6 +13,12 @@ export const lockdownSchema = z.object({
 });
 export type Lockdown = z.infer<typeof lockdownSchema>;
 
+export const activeLockdownResponseSchema = lockdownSchema.nullable();
+export type ActiveLockdownResponse = z.infer<typeof activeLockdownResponseSchema>;
+
+export const startLockdownBodySchema = z.object({ minutes: z.number() });
+export type StartLockdownBody = z.infer<typeof startLockdownBodySchema>;
+
 export type LockdownTimes = { startedAt: Date; endsAt: Date; stoppedAt: Date | null };
 export type LockdownStatus = "active" | "completed" | "stopped";
 
@@ -20,6 +26,10 @@ export function isValidLockdownLength(minutes: number): boolean {
   return (
     Number.isInteger(minutes) && minutes >= MIN_LOCKDOWN_MINUTES && minutes <= MAX_LOCKDOWN_MINUTES
   );
+}
+
+export function lockdownEndTime(startedAt: Date, minutes: number): Date {
+  return new Date(startedAt.getTime() + minutes * MS_PER_MINUTE);
 }
 
 export function lockdownStatus(lockdown: LockdownTimes, now: Date): LockdownStatus {

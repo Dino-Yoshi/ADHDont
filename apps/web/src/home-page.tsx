@@ -1,7 +1,8 @@
 import type { RejectedEntry } from "@adhdont/shared";
 import type { FormEvent } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getBlockList, getMe, resetBlockList, updateBlockList } from "./api-client";
+import { LockdownPanel } from "./lockdown-panel";
 import { supabase } from "./supabase";
 
 function rejectionMessage(reason: "invalid" | "own-domain", entry: string) {
@@ -11,6 +12,7 @@ function rejectionMessage(reason: "invalid" | "own-domain", entry: string) {
 
 export function HomePage() {
   const [username, setUsername] = useState<string | null>(null);
+  const [coins, setCoins] = useState<number | null>(null);
   const [accountError, setAccountError] = useState<string | null>(null);
   const [domains, setDomains] = useState<string[]>([]);
   const [entry, setEntry] = useState("");
@@ -19,11 +21,19 @@ export function HomePage() {
   const [blockListError, setBlockListError] = useState<string | null>(null);
   const [rejections, setRejections] = useState<RejectedEntry[]>([]);
 
+  const refreshAccount = useCallback(async () => {
+    try {
+      const me = await getMe();
+      setUsername(me.username);
+      setCoins(me.coins);
+      setAccountError(null);
+    } catch {
+      setAccountError("Could not load your account. Try again.");
+    }
+  }, []);
+
   useEffect(() => {
-    void getMe().then(
-      (me) => setUsername(me.username),
-      () => setAccountError("Could not load your account. Try again."),
-    );
+    void refreshAccount();
     void getBlockList().then(
       (blockList) => {
         setDomains(blockList.domains);
@@ -31,7 +41,7 @@ export function HomePage() {
       },
       () => setBlockListError("Could not load your block list. Reload the page to try again."),
     );
-  }, []);
+  }, [refreshAccount]);
 
   async function saveBlockList(entries: string[]) {
     setIsSaving(true);
@@ -73,6 +83,8 @@ export function HomePage() {
     <main>
       <h1>{username ? `Hi, ${username}` : "ADHDont"}</h1>
       {accountError && <p role="alert">{accountError}</p>}
+      {coins !== null && <p className="coin-total">{coins} coins</p>}
+      <LockdownPanel onLockdownEnded={refreshAccount} />
       <section aria-labelledby="block-list-heading">
         <h2 id="block-list-heading">Blocked websites</h2>
         <ul className="block-list">
