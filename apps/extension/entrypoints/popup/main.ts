@@ -1,4 +1,5 @@
 import { getMe } from "@/src/api-client";
+import { cancelLockdown, formatCountdown, syncLockdown } from "@/src/enforcement";
 import { supabase } from "@/src/supabase";
 
 const loadingEl = document.getElementById("loading") as HTMLDivElement;
@@ -11,6 +12,10 @@ const emailInput = document.getElementById("email-input") as HTMLInputElement;
 const passwordInput = document.getElementById("password-input") as HTMLInputElement;
 const signInButton = document.getElementById("sign-in-button") as HTMLButtonElement;
 const errorMessage = document.getElementById("error-message") as HTMLParagraphElement;
+const lockdownSection = document.getElementById("lockdown-section") as HTMLDivElement;
+const lockdownTime = document.getElementById("lockdown-time") as HTMLSpanElement;
+
+let countdownInterval: number | null = null;
 
 function showError(message: string): void {
   errorMessage.textContent = message;
@@ -22,15 +27,52 @@ function clearError(): void {
   errorMessage.classList.add("hidden");
 }
 
-function showSignedIn(username: string): void {
+function stopCountdown(): void {
+  if (countdownInterval !== null) {
+    window.clearInterval(countdownInterval);
+    countdownInterval = null;
+  }
+  lockdownSection.classList.add("hidden");
+}
+
+function startCountdown(endsAt: string): void {
+  stopCountdown();
+  const endsAtMs = new Date(endsAt).getTime();
+
+  function tick(): void {
+    const remainingMs = endsAtMs - Date.now();
+    if (remainingMs <= 0) {
+      stopCountdown();
+      return;
+    }
+    lockdownTime.textContent = formatCountdown(remainingMs);
+  }
+
+  tick();
+  lockdownSection.classList.remove("hidden");
+  countdownInterval = window.setInterval(tick, 1000);
+}
+
+async function updateLockdownStatus(): Promise<void> {
+  const active = await syncLockdown();
+  if (active) {
+    startCountdown(active.endsAt);
+  } else {
+    stopCountdown();
+  }
+}
+
+async function showSignedIn(username: string): Promise<void> {
   loadingEl.classList.add("hidden");
   signedOutView.classList.add("hidden");
   usernameDisplay.textContent = username;
   signedInView.classList.remove("hidden");
   clearError();
+  await updateLockdownStatus();
 }
 
 function showSignedOut(): void {
+  stopCountdown();
   loadingEl.classList.add("hidden");
   signedInView.classList.add("hidden");
   signedOutView.classList.remove("hidden");
@@ -47,7 +89,7 @@ async function checkSession(): Promise<void> {
 
     try {
       const me = await getMe();
-      showSignedIn(me.username);
+      await showSignedIn(me.username);
     } catch {
       await supabase.auth.signOut();
       showSignedOut();
@@ -81,7 +123,7 @@ signInForm.addEventListener("submit", async (event) => {
     }
 
     const me = await getMe();
-    showSignedIn(me.username);
+    await showSignedIn(me.username);
   } catch (err) {
     showError(err instanceof Error ? err.message : "Failed to sign in.");
   } finally {
@@ -93,6 +135,7 @@ signInForm.addEventListener("submit", async (event) => {
 signOutButton.addEventListener("click", async () => {
   signOutButton.disabled = true;
   try {
+    await cancelLockdown();
     await supabase.auth.signOut();
   } finally {
     signOutButton.disabled = false;
