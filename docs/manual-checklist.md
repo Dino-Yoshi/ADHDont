@@ -55,6 +55,14 @@ Firefox removes temporary add-ons when it restarts. To test step 10, use Firefox
 
 Browser versions and date:
 
+## Hands-on local review
+
+These results don't count toward the table above either.
+
+Darien reviewed the local app by hand in Firefox on 2026-11-02. Everything reviewed passed, including the blocked page refresh after its fix. The portal's light and dark modes and reduced motion weren't confirmed one by one; Darien's verdict on the portal was "probably good enough".
+
+Chrome, Edge and Opera weren't tested by hand, and Darien doesn't plan to test them.
+
 ## Local pre-release run
 
 These results don't count toward the table above, which is for the live portal and API.
