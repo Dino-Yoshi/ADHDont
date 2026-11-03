@@ -105,6 +105,15 @@ describe("isOwnDomain", () => {
     expect(isOwnDomain("youtube.com", PORTAL)).toBe(false);
   });
 
+  test("a parent of the portal domain counts as its own domain", () => {
+    expect(isOwnDomain("vercel.app", "adhdont.vercel.app")).toBe(true);
+    expect(isOwnDomain("app.vercel.app", "adhdont.vercel.app")).toBe(false);
+  });
+
+  test("a lookalike of a parent domain is not its own domain", () => {
+    expect(isOwnDomain("notvercel.app", "adhdont.vercel.app")).toBe(false);
+  });
+
   test("normalises the portal domain before comparing", () => {
     expect(isOwnDomain("adhdont.com", "https://www.ADHDont.com/")).toBe(true);
   });
@@ -128,13 +137,13 @@ describe("DEFAULT_BLOCK_LIST", () => {
 
 describe("buildBlockList", () => {
   test("returns nothing for no entries", () => {
-    expect(buildBlockList([], PORTAL)).toEqual({ domains: [], rejected: [] });
+    expect(buildBlockList([], [PORTAL])).toEqual({ domains: [], rejected: [] });
   });
 
   test("cleans, de-duplicates and sorts valid entries A-Z", () => {
     const result = buildBlockList(
       ["https://www.YouTube.com/watch", "reddit.com", "youtube.com", "WWW.reddit.com", "a.org"],
-      PORTAL,
+      [PORTAL],
     );
     expect(result).toEqual({ domains: ["a.org", "reddit.com", "youtube.com"], rejected: [] });
   });
@@ -142,7 +151,7 @@ describe("buildBlockList", () => {
   test("reports invalid and own-domain entries with the original text and a reason", () => {
     const result = buildBlockList(
       ["reddit.com", "nodots", "https://app.adhdont.com/home", "bad domain.com", "adhdont.com"],
-      PORTAL,
+      [PORTAL],
     );
     expect(result.domains).toEqual(["reddit.com"]);
     expect(result.rejected).toEqual([
@@ -153,7 +162,20 @@ describe("buildBlockList", () => {
     ]);
   });
 
+  test("rejects the API domain and its parents as well as the portal domain", () => {
+    const result = buildBlockList(
+      ["api.up.railway.app", "railway.app", "adhdont.com", "reddit.com"],
+      [PORTAL, "api.up.railway.app"],
+    );
+    expect(result.domains).toEqual(["reddit.com"]);
+    expect(result.rejected.map((r) => r.reason)).toEqual([
+      "own-domain",
+      "own-domain",
+      "own-domain",
+    ]);
+  });
+
   test("accepts a lookalike of the portal domain", () => {
-    expect(buildBlockList(["notadhdont.com"], PORTAL).domains).toEqual(["notadhdont.com"]);
+    expect(buildBlockList(["notadhdont.com"], [PORTAL]).domains).toEqual(["notadhdont.com"]);
   });
 });
