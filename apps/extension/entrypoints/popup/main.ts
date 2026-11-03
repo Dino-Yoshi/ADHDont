@@ -5,7 +5,7 @@ import { supabase } from "@/src/supabase";
 const loadingEl = document.getElementById("loading") as HTMLDivElement;
 const signedInView = document.getElementById("signed-in-view") as HTMLDivElement;
 const signedOutView = document.getElementById("signed-out-view") as HTMLDivElement;
-const usernameDisplay = document.getElementById("username-display") as HTMLElement;
+const statusUser = document.getElementById("status-user") as HTMLParagraphElement;
 const signOutButton = document.getElementById("sign-out-button") as HTMLButtonElement;
 const signInForm = document.getElementById("sign-in-form") as HTMLFormElement;
 const emailInput = document.getElementById("email-input") as HTMLInputElement;
@@ -66,7 +66,13 @@ async function updateLockdownStatus(): Promise<void> {
 async function showSignedIn(username: string | null): Promise<void> {
   loadingEl.classList.add("hidden");
   signedOutView.classList.add("hidden");
-  usernameDisplay.textContent = username ?? "Signed in";
+  if (username === null) {
+    statusUser.textContent = "Signed in";
+  } else {
+    const name = document.createElement("strong");
+    name.textContent = username;
+    statusUser.replaceChildren("Signed in as ", name);
+  }
   signedInView.classList.remove("hidden");
   clearError();
   await updateLockdownStatus();

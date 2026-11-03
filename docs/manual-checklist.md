@@ -1,6 +1,6 @@
 # Manual checklist
 
-Run this against the live portal and API with the production extension build (see `docs/deployment.md`) on Chrome, Edge, Opera and Firefox. Use a throwaway account, and pick a short lockdown for the finish step.
+Run this on Chrome, Edge, Opera and Firefox. Use a throwaway account, and pick a short lockdown for the finish step. A local run uses `pnpm dev` with `.output/chrome-mv3` / `.output/firefox-mv3`, while the recorded release results must come from the live portal and API with the production build (`.output/chrome-mv3-prod` / `.output/firefox-mv3-prod`, see `docs/deployment.md`).
 
 ## How to record
 
@@ -19,7 +19,7 @@ Replace `not executed` in the results table with `pass`, `fail` (add a note belo
 | 2 | Log in and log out | Log out, log in again. Refresh `/login` and `/register`: both load. |
 | 3 | Edit the block list | Add a domain, remove one, reload: the block list persists. |
 | 4 | Own domain is refused | Add the portal's domain, then its parent domain and the API's domain: each is rejected with a message. |
-| 5 | Sign in to the extension | Open the extension popup and sign in. It shows your username (or "Signed in") and no lockdown. |
+| 5 | Sign in to the extension | Open the extension popup and sign in. It shows "Signed in as" and your username, and no lockdown. |
 | 6 | Blocked page | Start a lockdown that includes `reddit.com`. Open the popup (blocks immediately), then visit `https://reddit.com`: the blocked page shows the time left. |
 | 7 | Subdomain is blocked | Visit `https://old.reddit.com`: the blocked page shows. Also try `http://reddit.com`. |
 | 8 | Portal and API stay reachable | During the lockdown the portal still loads and works, and `https://<api-domain>/health` still responds. |
