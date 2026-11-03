@@ -38,22 +38,28 @@ Firefox removes temporary add-ons when it restarts. To test step 10, use Firefox
 
 | # | Step | Chrome | Edge | Opera | Firefox |
 |---|---|---|---|---|---|
-| 1 | Register | not executed | not executed | not executed | not executed |
-| 2 | Log in and log out | not executed | not executed | not executed | not executed |
-| 3 | Edit the block list | not executed | not executed | not executed | not executed |
-| 4 | Own domain is refused | not executed | not executed | not executed | not executed |
-| 5 | Sign in to the extension | not executed | not executed | not executed | not executed |
-| 6 | Blocked page | not executed | not executed | not executed | not executed |
-| 7 | Subdomain is blocked | not executed | not executed | not executed | not executed |
-| 8 | Portal and API stay reachable | not executed | not executed | not executed | not executed |
-| 9 | Portal closed | not executed | not executed | not executed | not executed |
-| 10 | Browser restart | not executed | not executed | not executed | not executed |
-| 11 | Start delay | not executed | not executed | not executed | not executed |
-| 12 | Stop early | not executed | not executed | not executed | not executed |
-| 13 | Finish | not executed | not executed | not executed | not executed |
-| 14 | Dark and light mode | not executed | not executed | not executed | not executed |
+| 1 | Register | not executed | not executed | not executed | pass |
+| 2 | Log in and log out | not executed | not executed | not executed | pass |
+| 3 | Edit the block list | not executed | not executed | not executed | pass |
+| 4 | Own domain is refused | not executed | not executed | not executed | pass |
+| 5 | Sign in to the extension | not executed | not executed | not executed | pass |
+| 6 | Blocked page | not executed | not executed | not executed | pass |
+| 7 | Subdomain is blocked | not executed | not executed | not executed | pass |
+| 8 | Portal and API stay reachable | not executed | not executed | not executed | pass |
+| 9 | Portal closed | not executed | not executed | not executed | pass |
+| 10 | Browser restart | not executed | not executed | not executed | n/a - temporary add-on |
+| 11 | Start delay | not executed | not executed | not executed | pass |
+| 12 | Stop early | not executed | not executed | not executed | pass |
+| 13 | Finish | not executed | not executed | not executed | pass |
+| 14 | Dark and light mode | not executed | not executed | not executed | pass |
 
-Browser versions and date:
+Browser versions and date: Firefox 158.0.1, 2026-11-02, against https://adhdont.vercel.app and https://adhdont-api.vercel.app with the production extension build. Run by script, headless.
+
+- Chrome, Edge and Opera: not executed. Darien waived them for this release and takes responsibility for that decision.
+- Step 2: refreshing `/login` and `/register` was checked by HTTP request, not in the browser.
+- Step 10: release Firefox removes temporary add-ons when it closes. The same behaviour passed in Playwright Chromium on the live site.
+- Step 13: the notification was read through the extension API on the live run. Darien saw the flow by hand on the local build, not on the live site.
+- Step 14: each mode was set at launch; switching the system theme live wasn't checked.
 
 ## Hands-on local review
 

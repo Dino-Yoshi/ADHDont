@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch --env-file-if-exists=.env src/index.ts",
-    "start": "tsx --env-file-if-exists=.env src/index.ts"
+    "start": "tsx --env-file-if-exists=.env src/index.ts",
+    "build:vercel": "node scripts/build-vercel.mjs"
   },
   "dependencies": {
     "@adhdont/shared": "workspace:*",
     "@fastify/cors": "^11.3.1",
     "@supabase/supabase-js": "^2.118.0",
+    "esbuild": "^0.28.2",
     "fastify": "^5.12.7",
     "tsx": "^4.23.15",
     "zod": "^4.6.7"
