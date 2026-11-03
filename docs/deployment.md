@@ -1,5 +1,7 @@
 # Deployment
 
+This differs from SDS §2.7, which names Railway for the API: the API runs on Vercel instead.
+
 Placeholders only. Real values live in the platform dashboards and in gitignored `.env` files, never in git. Use Node 24 everywhere (`.nvmrc`, `engines`).
 
 ## 1. Supabase
