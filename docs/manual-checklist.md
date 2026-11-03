@@ -27,7 +27,7 @@ Replace `not executed` in the results table with `pass`, `fail` (add a note belo
 | 10 | Browser restart | Quit and reopen the browser. `reddit.com` is still blocked. |
 | 11 | Start delay | Start a lockdown from the portal while the popup is closed. A listed domain is blocked within about a minute. |
 | 12 | Stop early | Stop the lockdown in the portal. The domains unblock within about a minute, no notification appears and no coins are added. |
-| 13 | Finish | Start a 5 minute lockdown and let it end. The domains unblock, the notification "Lockdown complete" appears and the coins increase. |
+| 13 | Finish | Start a 5 minute lockdown and let it end. The domains unblock, the notification "Lockdown complete" appears and the coins increase. Refresh a blocked page left open from before the end: the original site loads. |
 | 14 | Dark and light mode | Switch the system theme. The portal follows it in both modes. |
 
 ### Firefox: restart step (step 10)
