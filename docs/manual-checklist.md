@@ -54,3 +54,28 @@ Firefox removes temporary add-ons when it restarts. To test step 10, use Firefox
 | 14 | Dark and light mode | not executed | not executed | not executed | not executed |
 
 Browser versions and date:
+
+## Local pre-release run
+
+These results don't count toward the table above, which is for the live portal and API.
+
+Scripted run on 2026-11-02 against commit `e04f5dc`, using the local portal and API, the dev Supabase project and the local extension builds. Browsers: Playwright Chromium 156 and Firefox 158.0.1, both headless.
+
+Playwright Chromium is a stand-in for the Chromium family. It is not Chrome, Edge or Opera, which weren't installed on the test machine, so those three remain `not executed` until someone runs them by hand.
+
+| # | Step | Chromium | Firefox | Note |
+|---|---|---|---|---|
+| 1 | Register | pass | pass | |
+| 2 | Log in and log out | pass | pass | Refreshing `/login` and `/register` is only provided by the dev server locally; check `vercel.json` on the live run. |
+| 3 | Edit the block list | pass | pass | |
+| 4 | Own domain is refused | pass | pass | Portal domain and subdomain in the browser. Parent and API domains are covered by unit tests only. |
+| 5 | Sign in to the extension | pass | pass | |
+| 6 | Blocked page | pass | pass | |
+| 7 | Subdomain is blocked | pass | pass | Plain `http://` checked on `neverssl.com`, not `reddit.com`. |
+| 8 | Portal and API stay reachable | pass | pass | |
+| 9 | Portal closed | pass | pass | |
+| 10 | Browser restart | pass | not executed | Release Firefox removes temporary add-ons when it closes. |
+| 11 | Start delay | pass (57 s) | pass (54 s) | |
+| 12 | Stop early | pass | pass | Coins and notification checked. |
+| 13 | Finish | pass | pass | Notification read through the extension API; a person hasn't seen it on screen. |
+| 14 | Dark and light mode | pass | pass | Each mode set at launch. Switching the system theme live hasn't been checked. |
