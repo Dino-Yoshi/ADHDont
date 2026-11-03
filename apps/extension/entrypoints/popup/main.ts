@@ -1,4 +1,4 @@
-import { getMe } from "@/src/api-client";
+import { ApiError, getMe } from "@/src/api-client";
 import { cancelLockdown, formatCountdown, syncLockdown } from "@/src/enforcement";
 import { supabase } from "@/src/supabase";
 
@@ -62,10 +62,11 @@ async function updateLockdownStatus(): Promise<void> {
   }
 }
 
-async function showSignedIn(username: string): Promise<void> {
+// The username is unknown when the API is unreachable; the lockdown status still renders.
+async function showSignedIn(username: string | null): Promise<void> {
   loadingEl.classList.add("hidden");
   signedOutView.classList.add("hidden");
-  usernameDisplay.textContent = username;
+  usernameDisplay.textContent = username ?? "Signed in";
   signedInView.classList.remove("hidden");
   clearError();
   await updateLockdownStatus();
@@ -90,9 +91,14 @@ async function checkSession(): Promise<void> {
     try {
       const me = await getMe();
       await showSignedIn(me.username);
-    } catch {
-      await supabase.auth.signOut();
-      showSignedOut();
+    } catch (error) {
+      // Only a rejected login signs out; an offline API keeps the session.
+      if (error instanceof ApiError && error.status === 401) {
+        await supabase.auth.signOut();
+        showSignedOut();
+      } else {
+        await showSignedIn(null);
+      }
     }
   } catch {
     showSignedOut();
@@ -122,8 +128,15 @@ signInForm.addEventListener("submit", async (event) => {
       return;
     }
 
-    const me = await getMe();
-    await showSignedIn(me.username);
+    try {
+      const me = await getMe();
+      await showSignedIn(me.username);
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
+        throw error;
+      }
+      await showSignedIn(null);
+    }
   } catch (err) {
     showError(err instanceof Error ? err.message : "Failed to sign in.");
   } finally {
