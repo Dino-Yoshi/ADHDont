@@ -7,6 +7,9 @@
     "dev": "wxt",
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox --mv3",
+    "build:prod": "wxt build --mode prod",
+    "build:firefox:prod": "wxt build -b firefox --mv3 --mode prod",
+    "zip:firefox:prod": "wxt zip -b firefox --mv3 --mode prod",
     "postinstall": "wxt prepare"
   },
   "dependencies": {

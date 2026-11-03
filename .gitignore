@@ -1,6 +1,8 @@
 .handoffs/
 node_modules
 .env
+.env.*
+!.env.example
 .output
 .wxt
 dist
