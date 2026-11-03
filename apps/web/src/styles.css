@@ -153,6 +153,8 @@ button:disabled {
 
 button[type="submit"] {
   background: linear-gradient(135deg, var(--accent), var(--bg-2));
+  /* Without this the gradient repeats under the 1px border and leaves a sliver. */
+  background-origin: border-box;
   border-color: transparent;
   color: white;
 }
