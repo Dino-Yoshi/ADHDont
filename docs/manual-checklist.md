@@ -27,7 +27,7 @@ Replace `not executed` in the results table with `pass`, `fail` (add a note belo
 | 10 | Browser restart | Quit and reopen the browser. `reddit.com` is still blocked. |
 | 11 | Start delay | Start a lockdown from the portal while the popup is closed. A listed domain is blocked within about a minute. |
 | 12 | Stop early | Stop the lockdown in the portal. The domains unblock within about a minute, no notification appears and no coins are added. |
-| 13 | Finish | Start a 5 minute lockdown and let it end. The domains unblock, the notification "Lockdown complete" appears and the coins increase. |
+| 13 | Finish | Start a 5 minute lockdown and let it end. The domains unblock, the notification "Lockdown complete" appears and the coins increase. Refresh a blocked page left open from before the end: the original site loads. |
 | 14 | Dark and light mode | Switch the system theme. The portal follows it in both modes. |
 
 ### Firefox: restart step (step 10)
@@ -77,5 +77,5 @@ Playwright Chromium is a stand-in for the Chromium family. It is not Chrome, Edg
 | 10 | Browser restart | pass | not executed | Release Firefox removes temporary add-ons when it closes. |
 | 11 | Start delay | pass (57 s) | pass (54 s) | |
 | 12 | Stop early | pass | pass | Coins and notification checked. |
-| 13 | Finish | pass | pass | Notification read through the extension API; a person hasn't seen it on screen. |
+| 13 | Finish | pass | pass | Notification read through the extension API. Darien's hands-on review found that refreshing a blocked page left open didn't return to the site; fixed and re-run in both browsers on the commit that adds this note. |
 | 14 | Dark and light mode | pass | pass | Each mode set at launch. Switching the system theme live hasn't been checked. |

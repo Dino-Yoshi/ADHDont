@@ -42,11 +42,13 @@ export async function applyBlockRules(domains: string[]): Promise<void> {
         priority: 1,
         action: {
           type: "redirect",
+          // The blocked page gets the original URL in its fragment, so a refresh can return to it.
           redirect: {
-            extensionPath: "/blocked.html",
+            regexSubstitution: `${browser.runtime.getURL("/blocked.html")}#\\0`,
           },
         },
         condition: {
+          regexFilter: "^.*$",
           requestDomains: safeDomains,
           resourceTypes: ["main_frame"],
         },
