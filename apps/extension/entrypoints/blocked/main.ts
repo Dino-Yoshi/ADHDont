@@ -4,20 +4,23 @@ import { getStoredLockdown } from "@/src/storage";
 const countdownEl = document.getElementById("countdown") as HTMLElement;
 const statusMessageEl = document.getElementById("status-message") as HTMLElement;
 
+const headingEl = document.getElementById("heading") as HTMLElement;
+const subtitleEl = document.getElementById("subtitle") as HTMLElement;
+const countdownSectionEl = document.getElementById("countdown-section") as HTMLElement;
+
+function showEnded(): void {
+  headingEl.textContent = "Lockdown complete";
+  subtitleEl.textContent = "You can now refresh this page.";
+  countdownSectionEl.hidden = true;
+  statusMessageEl.hidden = true;
+}
+
 async function updateCountdown(): Promise<void> {
   const stored = await getStoredLockdown();
-  if (!stored) {
-    countdownEl.textContent = "0:00:00";
-    statusMessageEl.textContent = "Lockdown complete — you can now refresh this page.";
-    return;
-  }
-
-  const endsAtMs = new Date(stored.endsAt).getTime();
-  const remainingMs = endsAtMs - Date.now();
+  const remainingMs = stored ? new Date(stored.endsAt).getTime() - Date.now() : 0;
 
   if (remainingMs <= 0) {
-    countdownEl.textContent = "0:00:00";
-    statusMessageEl.textContent = "Lockdown complete — you can now refresh this page.";
+    showEnded();
     return;
   }
 

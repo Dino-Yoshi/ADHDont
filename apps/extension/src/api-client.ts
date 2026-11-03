@@ -7,6 +7,15 @@ import {
 import { config } from "./config";
 import { supabase } from "./supabase";
 
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(message: string, status: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
 async function request(path: string): Promise<unknown> {
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
@@ -28,7 +37,7 @@ async function request(path: string): Promise<unknown> {
     } catch {
       // Keep default message
     }
-    throw new Error(message);
+    throw new ApiError(message, response.status);
   }
 
   return response.json();

@@ -58,17 +58,21 @@ export function normaliseDomain(
   return { ok: true, domain };
 }
 
-export function isOwnDomain(domain: string, portalDomain: string): boolean {
-  const portal = normaliseDomain(portalDomain);
-  if (!portal.ok) {
+// A parent counts too: the blocking rule matches subdomains, so blocking `vercel.app`
+// would block a portal at `adhdont.vercel.app`.
+export function isOwnDomain(domain: string, ownDomain: string): boolean {
+  const own = normaliseDomain(ownDomain);
+  if (!own.ok) {
     return false;
   }
-  return domain === portal.domain || domain.endsWith(`.${portal.domain}`);
+  return (
+    domain === own.domain || domain.endsWith(`.${own.domain}`) || own.domain.endsWith(`.${domain}`)
+  );
 }
 
 export function buildBlockList(
   entries: string[],
-  portalDomain: string,
+  ownDomains: string[],
 ): { domains: string[]; rejected: RejectedEntry[] } {
   const domains = new Set<string>();
   const rejected: RejectedEntry[] = [];
@@ -76,7 +80,7 @@ export function buildBlockList(
     const result = normaliseDomain(entry);
     if (!result.ok) {
       rejected.push({ entry, reason: "invalid" });
-    } else if (isOwnDomain(result.domain, portalDomain)) {
+    } else if (ownDomains.some((own) => isOwnDomain(result.domain, own))) {
       rejected.push({ entry, reason: "own-domain" });
     } else {
       domains.add(result.domain);

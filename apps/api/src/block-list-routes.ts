@@ -9,6 +9,10 @@ import type { FastifyPluginAsync, FastifyRequest } from "fastify";
 import { config } from "./config";
 import { sendDatabaseError } from "./database-error";
 
+const ownDomains = config.API_DOMAIN
+  ? [config.PORTAL_DOMAIN, config.API_DOMAIN]
+  : [config.PORTAL_DOMAIN];
+
 async function replaceBlockList(request: FastifyRequest, domains: string[]) {
   const { error: deleteError } = await request.supabase
     .from("block_list_entries")
@@ -85,7 +89,7 @@ export const blockListRoutes: FastifyPluginAsync = async (app) => {
     const body = updateBlockListRequestSchema.safeParse(request.body);
     if (!body.success) return reply.code(400).send({ message: "Invalid block list." });
 
-    const result = buildBlockList(body.data.entries, config.PORTAL_DOMAIN);
+    const result = buildBlockList(body.data.entries, ownDomains);
     const error = await replaceBlockList(request, result.domains);
     if (error) {
       return sendDatabaseError(request, reply, error, "Could not update your block list.");
