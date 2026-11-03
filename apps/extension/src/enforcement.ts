@@ -15,27 +15,10 @@ export const NOTIFICATION_ID = "lockdown-complete";
 export const NOTIFICATION_MESSAGE = "Lockdown complete — your sites are unblocked.";
 
 export function isSafeToBlock(domain: string): boolean {
-  if (isOwnDomain(domain, config.WXT_PORTAL_DOMAIN)) {
-    return false;
-  }
-
-  let apiHostname: string;
-  try {
-    apiHostname = new URL(config.WXT_API_URL).hostname;
-  } catch {
-    apiHostname = "";
-  }
-
-  if (apiHostname) {
-    if (domain === apiHostname || domain.endsWith(`.${apiHostname}`)) {
-      return false;
-    }
-    if (isOwnDomain(domain, apiHostname)) {
-      return false;
-    }
-  }
-
-  return true;
+  // isOwnDomain rejects hosts without a dot (like localhost), so compare those directly.
+  const apiHostname = new URL(config.WXT_API_URL).hostname;
+  const isApiHost = domain === apiHostname || isOwnDomain(domain, apiHostname);
+  return !isApiHost && !isOwnDomain(domain, config.WXT_PORTAL_DOMAIN);
 }
 
 export async function removeBlockRules(): Promise<void> {
@@ -99,7 +82,14 @@ export async function syncLockdown(): Promise<Lockdown | null> {
   try {
     const active = await getActiveLockdown();
     if (!active) {
-      await cancelLockdown();
+      // The server has no lockdown. If the stored one already reached its end, it finished
+      // (and the user deserves the notification); otherwise it was stopped early.
+      const stored = await getStoredLockdown();
+      if (stored && new Date(stored.endsAt).getTime() <= Date.now()) {
+        await finishLockdown();
+      } else {
+        await cancelLockdown();
+      }
       return null;
     }
 
