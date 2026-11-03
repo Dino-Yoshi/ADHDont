@@ -77,5 +77,5 @@ Playwright Chromium is a stand-in for the Chromium family. It is not Chrome, Edg
 | 10 | Browser restart | pass | not executed | Release Firefox removes temporary add-ons when it closes. |
 | 11 | Start delay | pass (57 s) | pass (54 s) | |
 | 12 | Stop early | pass | pass | Coins and notification checked. |
-| 13 | Finish | pass | pass | Notification read through the extension API; a person hasn't seen it on screen. |
+| 13 | Finish | pass | pass | Notification read through the extension API. Darien's hands-on review found that refreshing a blocked page left open didn't return to the site; fixed and re-run in both browsers on the commit that adds this note. |
 | 14 | Dark and light mode | pass | pass | Each mode set at launch. Switching the system theme live hasn't been checked. |
