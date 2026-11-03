@@ -1,6 +1,14 @@
 {
   "files": {
-    "includes": ["**", "!**/.output", "!**/.wxt", "!**/dist", "!**/node_modules", "!**/*.md"]
+    "includes": [
+      "**",
+      "!**/.output",
+      "!**/.wxt",
+      "!**/.vercel",
+      "!**/dist",
+      "!**/node_modules",
+      "!**/*.md"
+    ]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 100 },
   "javascript": {

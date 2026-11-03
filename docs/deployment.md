@@ -7,29 +7,32 @@ Placeholders only. Real values live in the platform dashboards and in gitignored
 1. Link the project and push the schema: `supabase link --project-ref <project-ref>`, then `supabase db push`.
 2. Auth, URL configuration: set **Site URL** and **Redirect URLs** to `https://<portal-domain>`.
 
-## 2. API on Railway
+## 2. API on Vercel
 
-1. New service from the GitHub repo, root directory = repo root. `railway.json` sets the start command (`pnpm --filter @adhdont/api start`) and the health check (`/health`).
-2. Set the Node version to 24 (service variable `RAILPACK_NODE_VERSION=24` if the build log does not show 24; the build reads `.nvmrc`).
+The API is a second Vercel project, because Railway requires a paid plan.
+
+1. Import the same repo as a new project. Root directory = `apps/api`. `apps/api/vercel.json` sets install (`pnpm install --frozen-lockfile`) and build (`pnpm --filter @adhdont/api build:vercel`), which bundles the API into a Vercel Function (Build Output API v3, `.vercel/output`). Enable "Include source files outside of the Root Directory".
+2. Settings, Node.js Version: 24.x.
 3. Variables:
 
 | Variable | Value |
 |---|---|
+| `ENABLE_EXPERIMENTAL_COREPACK` | `1` (so the pinned pnpm is used; set it on both Vercel projects) |
 | `PORTAL_ORIGIN` | `https://<portal-domain>` (the origin; a trailing slash or path is stripped) |
 | `PORTAL_DOMAIN` | `<portal-domain>` |
-| `API_DOMAIN` | `<api-domain>` (the Railway public domain, no scheme) |
+| `API_DOMAIN` | `<api-domain>` (the API project's `*.vercel.app` domain, no scheme) |
 | `SUPABASE_URL` | `https://<project-ref>.supabase.co` |
 | `SUPABASE_ANON_KEY` | the project's anon key |
 
-Railway sets `PORT`; the API binds `0.0.0.0:$PORT`.
+Locally, `pnpm dev` and `pnpm start` still run the API with `listen` on `PORT`.
 
-A parent of the portal or API domain (for example `vercel.app`, `railway.app`) is also refused on the block list, because blocking a domain blocks its subdomains.
+A parent of the portal or API domain (for example `vercel.app`) is also refused on the block list, because blocking a domain blocks its subdomains.
 
 ## 3. Portal on Vercel
 
 1. Import the repo. Root directory = `apps/web`. `apps/web/vercel.json` sets install (`pnpm install --frozen-lockfile`), build (`pnpm --filter @adhdont/web build`), output `dist`, and the rewrite that serves `/login` and `/register` on refresh. Enable "Include source files outside of the Root Directory".
 2. Settings, Node.js Version: 24.x.
-3. Variables: `VITE_API_URL` = `https://<api-domain>`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`.
+3. Variables: `ENABLE_EXPERIMENTAL_COREPACK` = `1`, `VITE_API_URL` = `https://<api-domain>`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`.
 
 ## 4. Extension production build
 
